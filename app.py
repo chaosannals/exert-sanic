@@ -1,11 +1,21 @@
 from sanic import Sanic
 from sanic.response import json
+from tortoise import Tortoise
+from exert.model.tester import Tester
 
 app = Sanic()
 
+@app.listener('before_server_start')
+async def init_db(app, loop):
+    await Tortoise.init(
+        db_url='mysql://root:root@127.0.0.1:3306/exert',
+        modules={ 'models': ['exert.model.tester'] }
+    )
+
 @app.route('/')
 async def index(request):
-    return json({'hello': 'world'})
+    r = [ i.id for i in await Tester.all()]
+    return json({'hello': r })
 
 @app.websocket('/api')
 async def work(request, ws):
