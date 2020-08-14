@@ -1,9 +1,13 @@
+import os
+import sys
 from sanic import Sanic
 from sanic.response import json
 from tortoise import Tortoise
 from exert.model.tester import Tester
 
 app = Sanic()
+here = os.path.dirname(os.path.realpath(sys.argv[0]))
+app.static('/', os.path.join(here, 'public'))
 
 @app.listener('before_server_start')
 async def init_db(app, loop):

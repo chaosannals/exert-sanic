@@ -4,3 +4,6 @@ Content-Type: application/json
 {
     "test": "info"
 }
+
+### robots.txt
+GET http://127.0.0.1:8000/robots.txt HTTP/1.1
