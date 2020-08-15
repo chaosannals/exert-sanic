@@ -1,25 +1,28 @@
 import os
 import sys
-from sanic import Sanic
 from sanic.response import json
-from tortoise import Tortoise
+from sanic.log import logger
+from exert import Application
+from exert.model import init_db
 from exert.model.tester import Tester
 
-app = Sanic()
-here = os.path.dirname(os.path.realpath(sys.argv[0]))
-app.static('/', os.path.join(here, 'public'))
+# 创建应用。
+app = Application('exert')
+
+# 初始化
+
 
 @app.listener('before_server_start')
-async def init_db(app, loop):
-    await Tortoise.init(
-        db_url='mysql://root:root@127.0.0.1:3306/exert',
-        modules={ 'models': ['exert.model.tester'] }
-    )
+async def initialize(app, loop):
+    await init_db()
+
 
 @app.route('/')
 async def index(request):
-    r = [ i.id for i in await Tester.all()]
-    return json({'hello': r })
+    r = [i.id for i in await Tester.all()]
+    logger.info('log output')
+    return json({'hello': r})
+
 
 @app.websocket('/api')
 async def work(request, ws):
@@ -31,5 +34,9 @@ async def work(request, ws):
         print('Received: ' + data)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
-    
+    app.run(
+        host='0.0.0.0',
+        port=8000,
+        debug=True,
+        access_log=True
+    )
