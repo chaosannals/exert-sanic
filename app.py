@@ -1,5 +1,3 @@
-import os
-import sys
 from sanic.response import json
 from sanic.log import logger
 from exert import Application
@@ -9,11 +7,13 @@ from exert.model.tester import Tester
 # 创建应用。
 app = Application('exert')
 
-# 初始化
-
 
 @app.listener('before_server_start')
 async def initialize(app, loop):
+    '''
+    初始化。
+    '''
+
     await init_db()
 
 
