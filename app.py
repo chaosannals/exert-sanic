@@ -1,5 +1,6 @@
-from sanic.response import json
+from sanic.response import json, html
 from sanic.log import logger
+from jinja2 import Environment, PackageLoader, select_autoescape
 from exert import Application
 from exert.model import init_db
 from exert.model.tester import Tester
@@ -15,6 +16,22 @@ async def initialize(app, loop):
     '''
 
     await init_db()
+
+
+@app.route('/jinja2.html')
+async def jinja2(request):
+    env = Environment(
+        loader=PackageLoader('view', '.'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
+    template = env.get_template('index.html')
+    return html(template.render(users=[{
+        'url': 'url1',
+        'username': 'user1'
+    }, {
+        'url': 'url2',
+        'username': 'user2'
+    }]))
 
 
 @app.route('/')
