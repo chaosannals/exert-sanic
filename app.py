@@ -7,6 +7,10 @@ from exert.model.tester import Tester
 
 # 创建应用。
 app = Application('exert')
+jinja2 = Environment(
+    loader=PackageLoader('view', '.'),
+    autoescape=select_autoescape(['html', 'xml'])
+)
 
 
 @app.listener('before_server_start')
@@ -19,12 +23,8 @@ async def initialize(app, loop):
 
 
 @app.route('/jinja2.html')
-async def jinja2(request):
-    env = Environment(
-        loader=PackageLoader('view', '.'),
-        autoescape=select_autoescape(['html', 'xml'])
-    )
-    template = env.get_template('index.html')
+async def jinja2_index(request):
+    template = jinja2.get_template('index.html')
     return html(template.render(users=[{
         'url': 'url1',
         'username': 'user1'

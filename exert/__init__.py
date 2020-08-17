@@ -28,7 +28,7 @@ class Application(Sanic):
                 'loggers': {
                     'sanic.root': {
                         'level': 'DEBUG',
-                        'handlers': ['console', 'access_file'],
+                        'handlers': ['console', 'error_file'],
                         'propagate': True
                     },
                     'sanic.error': {
