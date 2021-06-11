@@ -36,5 +36,5 @@ toml==0.10.1
 tortoise-orm==0.16.14
 typing-extensions==3.7.4.2
 urllib3==1.25.9
-websockets==8.1
+websockets==9.1
 wrapt==1.12.1
